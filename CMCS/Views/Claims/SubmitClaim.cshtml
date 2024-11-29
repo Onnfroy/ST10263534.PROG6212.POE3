@@ -16,6 +16,31 @@
             <input type="text" class="form-control" id="LecturerName" name="LecturerName" required />
             <span asp-validation-for="LecturerName" class="text-danger"></span>
         </div>
+
+        <div class="mb-3">
+            <label for="LecturerEmail" class="form-label">Lecturer Email</label>
+            <input type="email" class="form-control" id="LecturerEmail" name="LecturerEmail" required />
+            <span asp-validation-for="LecturerEmail" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="LecturerPhoneNumber" class="form-label">Lecturer Phone Number</label>
+            <input type="tel" class="form-control" id="LecturerPhoneNumber" name="LecturerPhoneNumber" required />
+            <span asp-validation-for="LecturerPhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Department" class="form-label">Department</label>
+            <select class="form-select" id="Department" name="Department" required>
+                <option value="">-- Select Department --</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+            </select>
+            <span asp-validation-for="Department" class="text-danger"></span>
+        </div>
+
         <div class="mb-3">
             <label for="HoursWorked" class="form-label">Hours Worked</label>
             <input type="number" class="form-control" id="HoursWorked" name="HoursWorked" step="0.1" required />

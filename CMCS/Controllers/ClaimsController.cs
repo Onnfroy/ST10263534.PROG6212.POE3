@@ -1,6 +1,7 @@
 ﻿using CMCS.Data;
 using CMCS.Models;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 
 namespace CMCS.Controllers
 {
@@ -30,7 +31,7 @@ namespace CMCS.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitClaim(MonthlyClaim claim, IFormFile uploadedFile)
         {
-            // Model state validation
+            // Validate Model State
             if (!ModelState.IsValid)
             {
                 return View(claim); // Return with validation errors
@@ -40,6 +41,25 @@ namespace CMCS.Controllers
             if (claim.HoursWorked <= 0 || claim.HourlyRate <= 0)
             {
                 ModelState.AddModelError("", "Hours Worked and Hourly Rate must be greater than zero.");
+                return View(claim);
+            }
+
+            // Validate new fields
+            if (string.IsNullOrEmpty(claim.LecturerEmail) || !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(claim.LecturerEmail))
+            {
+                ModelState.AddModelError("LecturerEmail", "A valid email address is required.");
+                return View(claim);
+            }
+
+            if (string.IsNullOrEmpty(claim.LecturerPhoneNumber))
+            {
+                ModelState.AddModelError("LecturerPhoneNumber", "Phone number is required.");
+                return View(claim);
+            }
+
+            if (string.IsNullOrEmpty(claim.Department))
+            {
+                ModelState.AddModelError("Department", "Department is required.");
                 return View(claim);
             }
 
@@ -104,7 +124,7 @@ namespace CMCS.Controllers
             // Set default claim status
             claim.Status = "Pending";
 
-            // Add the claim to the database
+            // Save the claim to the database
             _context.Claims.Add(claim);
             await _context.SaveChangesAsync();
 
@@ -226,23 +246,62 @@ namespace CMCS.Controllers
             return RedirectToAction(nameof(ManageClaims));
         }
 
-        // HR - Generate Reports
-        public IActionResult GenerateReport()
+        // HR - Dashboard for Report Generation
+        [HttpGet]
+        public IActionResult HRDashboard()
         {
+            // Fetch approved claims to show a summary or optional preview (if needed)
             var approvedClaims = _context.Claims.Where(c => c.Status == "Approved").ToList();
 
-            // Logic to generate report (e.g., Excel or PDF)...
-            var reportData = approvedClaims.Select(c => new
-            {
-                c.LecturerName,
-                c.HoursWorked,
-                c.HourlyRate,
-                TotalPayment = c.HoursWorked * c.HourlyRate
-            });
+            // Pass approved claims to the view (optional, if you want a preview on the dashboard)
+            return View(approvedClaims);
+        }
 
-            // Use a library like EPPlus to create Excel files or a PDF library for PDFs.
-            // This example returns the report data in JSON for simplicity.
-            return Ok(reportData);
+        // HR - Generate Reports
+        [HttpPost]
+        public IActionResult GenerateReport()
+        {
+            // Fetch approved claims
+            var approvedClaims = _context.Claims.Where(c => c.Status == "Approved").ToList();
+
+            // Create a new Excel workbook using ClosedXML
+            using (var workbook = new ClosedXML.Excel.XLWorkbook())
+            {
+                // Add a worksheet
+                var worksheet = workbook.Worksheets.Add("Approved Claims Report");
+
+                // Add headers
+                worksheet.Cell(1, 1).Value = "Lecturer Name";
+                worksheet.Cell(1, 2).Value = "Hours Worked";
+                worksheet.Cell(1, 3).Value = "Hourly Rate";
+                worksheet.Cell(1, 4).Value = "Total Payment";
+
+                // Add data rows
+                for (int i = 0; i < approvedClaims.Count; i++)
+                {
+                    var claim = approvedClaims[i];
+                    worksheet.Cell(i + 2, 1).Value = claim.LecturerName;
+                    worksheet.Cell(i + 2, 2).Value = claim.HoursWorked;
+                    worksheet.Cell(i + 2, 3).Value = claim.HourlyRate;
+                    worksheet.Cell(i + 2, 4).Value = claim.HoursWorked * claim.HourlyRate;
+                }
+
+                // Format the header row
+                var headerRow = worksheet.Range("A1:D1");
+                headerRow.Style.Font.Bold = true;
+                headerRow.Style.Fill.BackgroundColor = ClosedXML.Excel.XLColor.LightGray;
+
+                // Adjust column widths
+                worksheet.Columns().AdjustToContents();
+
+                // Return the Excel file as a downloadable response
+                using (var stream = new System.IO.MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Seek(0, System.IO.SeekOrigin.Begin);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ApprovedClaimsReport.xlsx");
+                }
+            }
         }
     }
 }

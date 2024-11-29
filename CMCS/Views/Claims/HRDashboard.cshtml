@@ -1,0 +1,44 @@
+﻿@model IEnumerable<CMCS.Models.MonthlyClaim>
+
+@{
+    ViewData["Title"] = "HR Dashboard";
+}
+
+<h1>HR Dashboard</h1>
+<p>Welcome to the HR Dashboard. Here you can generate reports for approved claims.</p>
+
+<!-- Optional: Show summary of approved claims -->
+@if (Model != null && Model.Any())
+{
+    <h3>Approved Claims Summary</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Lecturer Name</th>
+                <th>Hours Worked</th>
+                <th>Hourly Rate</th>
+                <th>Total Payment</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in Model)
+            {
+                <tr>
+                    <td>@claim.LecturerName</td>
+                    <td>@claim.HoursWorked</td>
+                    <td>@claim.HourlyRate</td>
+                    <td>@(claim.HoursWorked * claim.HourlyRate)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No approved claims to display at the moment.</p>
+}
+
+<!-- Button to generate and download the report -->
+<form asp-action="GenerateReport" method="post">
+    <button type="submit" class="btn btn-primary">Download Approved Claims Report</button>
+</form>

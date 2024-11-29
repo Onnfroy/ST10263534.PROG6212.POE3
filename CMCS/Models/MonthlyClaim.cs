@@ -10,7 +10,17 @@ namespace CMCS.Models
 
         [Required]
         [MaxLength(100)]
-        public string LecturerName { get; set; } = string.Empty; // Ensure non-null initialization
+        public string LecturerName { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string LecturerEmail { get; set; } = string.Empty;
+
+        [Phone]
+        public string LecturerPhoneNumber { get; set; } = string.Empty;
+
+        [Required]
+        public string Department { get; set; } = string.Empty; // Dropdown values
 
         [Required]
         public double HoursWorked { get; set; }
@@ -18,7 +28,7 @@ namespace CMCS.Models
         [Required]
         public double HourlyRate { get; set; }
 
-        public string? Notes { get; set; } // Optional field
+        public string? Notes { get; set; } // Optional
 
         public string Status { get; set; } = "Pending";
 
