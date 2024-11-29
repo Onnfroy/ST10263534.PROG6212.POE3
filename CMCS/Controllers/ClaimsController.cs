@@ -30,17 +30,27 @@ namespace CMCS.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitClaim(MonthlyClaim claim, IFormFile uploadedFile)
         {
+            // Model state validation
             if (!ModelState.IsValid)
             {
                 return View(claim); // Return with validation errors
             }
 
+            // Business rule validation: Ensure hours worked and hourly rate are valid
+            if (claim.HoursWorked <= 0 || claim.HourlyRate <= 0)
+            {
+                ModelState.AddModelError("", "Hours Worked and Hourly Rate must be greater than zero.");
+                return View(claim);
+            }
+
+            // Ensure uploaded file meets requirements
             if (uploadedFile == null || uploadedFile.Length == 0)
             {
                 ModelState.AddModelError("uploadedFile", "Supporting document is required.");
                 return View(claim);
             }
 
+            // Validate file type and size
             var allowedExtensions = new[] { ".pdf", ".docx", ".xlsx" };
             var fileExtension = Path.GetExtension(uploadedFile.FileName).ToLower();
 
@@ -58,18 +68,21 @@ namespace CMCS.Controllers
 
             try
             {
+                // Create uploads directory if it doesn't exist
                 var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
                 if (!Directory.Exists(uploadsDir))
                 {
                     Directory.CreateDirectory(uploadsDir);
                 }
-                var filePath = Path.Combine(uploadsDir, uploadedFile.FileName);
 
+                // Save the file
+                var filePath = Path.Combine(uploadsDir, uploadedFile.FileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await uploadedFile.CopyToAsync(stream);
                 }
 
+                // Save the document reference in the database
                 var document = new UploadedDocument
                 {
                     FileName = uploadedFile.FileName,
@@ -78,18 +91,24 @@ namespace CMCS.Controllers
                 _context.Documents.Add(document);
                 await _context.SaveChangesAsync();
 
+                // Assign the document ID to the claim
                 claim.DocumentId = document.Id;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "An error occurred while uploading the document. Please try again.");
+                // Handle exceptions during file upload
+                ModelState.AddModelError("", $"An error occurred while uploading the document: {ex.Message}");
                 return View(claim);
             }
 
+            // Set default claim status
             claim.Status = "Pending";
+
+            // Add the claim to the database
             _context.Claims.Add(claim);
             await _context.SaveChangesAsync();
 
+            // Success message
             TempData["SuccessMessage"] = "Claim submitted successfully!";
             return RedirectToAction(nameof(ViewClaims));
         }
