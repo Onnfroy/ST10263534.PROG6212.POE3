@@ -27,6 +27,26 @@
             <span asp-validation-for="HourlyRate" class="text-danger"></span>
         </div>
         <div class="mb-3">
+            <label for="TotalPayment" class="form-label">Total Payment</label>
+            <input type="text" class="form-control" id="TotalPayment" readonly />
+        </div>
+
+        <script>
+            const hoursWorkedInput = document.getElementById("HoursWorked");
+            const hourlyRateInput = document.getElementById("HourlyRate");
+            const totalPaymentInput = document.getElementById("TotalPayment");
+
+            function calculateTotalPayment() {
+                const hoursWorked = parseFloat(hoursWorkedInput.value) || 0;
+                const hourlyRate = parseFloat(hourlyRateInput.value) || 0;
+                const totalPayment = hoursWorked * hourlyRate;
+                totalPaymentInput.value = totalPayment.toFixed(2);
+            }
+
+            hoursWorkedInput.addEventListener("input", calculateTotalPayment);
+            hourlyRateInput.addEventListener("input", calculateTotalPayment);
+        </script>
+        <div class="mb-3">
             <label for="Notes" class="form-label">Notes</label>
             <textarea class="form-control" id="Notes" name="Notes"></textarea>
         </div>
