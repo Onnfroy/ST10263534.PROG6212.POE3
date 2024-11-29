@@ -6,6 +6,13 @@
 
 <h1>Manage Claims</h1>
 
+<!-- Auto-Approve Claims Button -->
+<div class="mb-3">
+    <form asp-action="AutoApproveClaims" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-primary">Auto-Approve Eligible Claims</button>
+    </form>
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>

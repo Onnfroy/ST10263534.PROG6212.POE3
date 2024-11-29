@@ -152,6 +152,25 @@ namespace CMCS.Controllers
             return View(pendingClaims);
         }
 
+        // Coordinator - Auto-Approve Eligible Claims (POST)
+        [HttpPost]
+        public async Task<IActionResult> AutoApproveClaims()
+        {
+            var claimsToApprove = _context.Claims
+                .Where(c => c.Status == "Pending" && c.HoursWorked > 10 && c.HourlyRate > 50)
+                .ToList();
+
+            foreach (var claim in claimsToApprove)
+            {
+                claim.Status = "Approved";
+                claim.Notes = "Automatically approved based on criteria.";
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Eligible claims have been auto-approved.";
+            return RedirectToAction(nameof(ManageClaims));
+        }
+
         // Coordinator - Approve or Reject a Claim
         [HttpPost]
         [HttpPost]
@@ -205,6 +224,25 @@ namespace CMCS.Controllers
             }
 
             return RedirectToAction(nameof(ManageClaims));
+        }
+
+        // HR - Generate Reports
+        public IActionResult GenerateReport()
+        {
+            var approvedClaims = _context.Claims.Where(c => c.Status == "Approved").ToList();
+
+            // Logic to generate report (e.g., Excel or PDF)...
+            var reportData = approvedClaims.Select(c => new
+            {
+                c.LecturerName,
+                c.HoursWorked,
+                c.HourlyRate,
+                TotalPayment = c.HoursWorked * c.HourlyRate
+            });
+
+            // Use a library like EPPlus to create Excel files or a PDF library for PDFs.
+            // This example returns the report data in JSON for simplicity.
+            return Ok(reportData);
         }
     }
 }
