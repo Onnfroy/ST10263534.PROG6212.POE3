@@ -17,6 +17,9 @@
     <thead>
         <tr>
             <th>Lecturer Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Department</th>
             <th>Hours Worked</th>
             <th>Hourly Rate</th>
             <th>Total Amount</th>
@@ -31,6 +34,9 @@
         {
             <tr>
                 <td>@claim.LecturerName</td>
+                <td>@claim.LecturerEmail</td>
+                <td>@claim.LecturerPhoneNumber</td>
+                <td>@claim.Department</td>
                 <td>@claim.HoursWorked</td>
                 <td>@claim.HourlyRate</td>
                 <td>@(claim.HoursWorked * claim.HourlyRate)</td>

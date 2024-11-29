@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMCS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241129172705_AddLecturerDetailsToMonthlyClaim")]
-    partial class AddLecturerDetailsToMonthlyClaim
+    [Migration("20241129191033_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,10 @@ namespace CMCS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("DocumentId")
                         .HasColumnType("int");
 
@@ -41,10 +45,18 @@ namespace CMCS.Migrations
                     b.Property<double>("HoursWorked")
                         .HasColumnType("float");
 
+                    b.Property<string>("LecturerEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LecturerName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LecturerPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");

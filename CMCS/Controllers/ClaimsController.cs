@@ -160,7 +160,10 @@ namespace CMCS.Controllers
                 .Select(c => new MonthlyClaim
                 {
                     Id = c.Id,
-                    LecturerName = c.LecturerName,
+                    LecturerName = c.LecturerName ?? "Unknown",
+                    LecturerEmail = c.LecturerEmail ?? "N/A",
+                    LecturerPhoneNumber = c.LecturerPhoneNumber ?? "N/A",
+                    Department = c.Department ?? "N/A",
                     HoursWorked = c.HoursWorked,
                     HourlyRate = c.HourlyRate,
                     Notes = c.Notes,
@@ -250,10 +253,10 @@ namespace CMCS.Controllers
         [HttpGet]
         public IActionResult HRDashboard()
         {
-            // Fetch approved claims to show a summary or optional preview (if needed)
-            var approvedClaims = _context.Claims.Where(c => c.Status == "Approved").ToList();
+            var approvedClaims = _context.Claims
+                .Where(c => c.Status == "Approved")
+                .ToList();
 
-            // Pass approved claims to the view (optional, if you want a preview on the dashboard)
             return View(approvedClaims);
         }
 

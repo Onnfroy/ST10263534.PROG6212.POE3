@@ -31,6 +31,9 @@ namespace CMCS.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LecturerName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LecturerEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LecturerPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Department = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HoursWorked = table.Column<double>(type: "float", nullable: false),
                     HourlyRate = table.Column<double>(type: "float", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
