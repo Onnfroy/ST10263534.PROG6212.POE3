@@ -1,0 +1,17 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to the Contract Monthly Claim System (CMCS)</h1>
+    <p class="lead">Please select an option below:</p>
+
+    <nav>
+        <a class="btn btn-primary m-2" href="/Claims/SubmitClaim">Submit a Claim</a>
+        <a class="btn btn-secondary m-2" href="/Claims/ViewClaims">View Your Claims</a>
+        <a class="btn btn-success m-2" href="/Claims/ManageClaims">Coordinator Dashboard</a>
+    </nav>
+</div>

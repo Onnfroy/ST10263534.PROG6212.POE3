@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model IEnumerable<CMCS.Models.MonthlyClaim>
+@{
+    ViewData["Title"] = "Your Claims";
+}
+
+<h1>Your Claims</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Lecturer Name</th>
+            <th>Hours Worked</th>
+            <th>Hourly Rate</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Document</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr>
+                <td>@claim.LecturerName</td>
+                <td>@claim.HoursWorked</td>
+                <td>@claim.HourlyRate</td>
+                <td>@(claim.HoursWorked * claim.HourlyRate)</td>
+                <td>
+                    @claim.Status
+                    @if (!string.IsNullOrWhiteSpace(claim.Notes))
+                    {
+                        <br />
+                        <small class="text-muted">Note: @claim.Notes</small>
+                    }
+                </td>
+                <td>
+                    @if (claim.Document != null)
+                    {
+                        <a href="@claim.Document.FilePath" target="_blank">View Document</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

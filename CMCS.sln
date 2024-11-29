@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35431.28
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMCS", "CMCS\CMCS.csproj", "{67E10843-FFAA-4AD1-A58A-AC7F0C3DF16F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMCS.Tests", "CMCS.Tests\CMCS.Tests.csproj", "{34DAC84B-0DA7-47D6-BA2A-FDC8CCF1A6F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67E10843-FFAA-4AD1-A58A-AC7F0C3DF16F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E10843-FFAA-4AD1-A58A-AC7F0C3DF16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E10843-FFAA-4AD1-A58A-AC7F0C3DF16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E10843-FFAA-4AD1-A58A-AC7F0C3DF16F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34DAC84B-0DA7-47D6-BA2A-FDC8CCF1A6F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34DAC84B-0DA7-47D6-BA2A-FDC8CCF1A6F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34DAC84B-0DA7-47D6-BA2A-FDC8CCF1A6F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34DAC84B-0DA7-47D6-BA2A-FDC8CCF1A6F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53EB8A6B-4DF6-4AD3-9158-97F494041E0C}
+	EndGlobalSection
+EndGlobal

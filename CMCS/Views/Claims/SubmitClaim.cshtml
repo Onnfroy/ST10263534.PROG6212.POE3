@@ -1,0 +1,71 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model CMCS.Models.MonthlyClaim
+@{
+    ViewData["Title"] = "Submit a Claim";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Submit a Claim</h1>
+
+    <form asp-action="SubmitClaim" method="post" enctype="multipart/form-data" class="p-4 border rounded shadow bg-light">
+        <div class="mb-3">
+            <label for="LecturerName" class="form-label">Lecturer Name</label>
+            <input type="text" class="form-control" id="LecturerName" name="LecturerName" required />
+            <span asp-validation-for="LecturerName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="HoursWorked" class="form-label">Hours Worked</label>
+            <input type="number" class="form-control" id="HoursWorked" name="HoursWorked" step="0.1" required />
+            <span asp-validation-for="HoursWorked" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="HourlyRate" class="form-label">Hourly Rate</label>
+            <input type="number" class="form-control" id="HourlyRate" name="HourlyRate" step="0.1" required />
+            <span asp-validation-for="HourlyRate" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Notes" class="form-label">Notes</label>
+            <textarea class="form-control" id="Notes" name="Notes"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="uploadedFile" class="form-label">Supporting Document</label>
+            <input type="file" class="form-control" id="uploadedFile" name="uploadedFile" accept=".pdf,.docx,.xlsx" required />
+            <small class="text-muted">Allowed file types: .pdf, .docx, .xlsx (Max size: 2MB)</small>
+            <span id="fileError" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Submit Claim</button>
+    </form>
+    <script>
+        document.querySelector("form").addEventListener("submit", function (event) {
+            const fileInput = document.getElementById("uploadedFile");
+            const fileError = document.getElementById("fileError");
+            const allowedExtensions = ["pdf", "docx", "xlsx"];
+            const maxFileSize = 2 * 1024 * 1024; // 2MB
+
+            fileError.textContent = ""; // Clear previous errors
+
+            if (!fileInput.files.length) {
+                fileError.textContent = "Please upload a supporting document.";
+                event.preventDefault();
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const fileExtension = file.name.split(".").pop().toLowerCase();
+
+            if (!allowedExtensions.includes(fileExtension)) {
+                fileError.textContent = "Invalid file type. Only .pdf, .docx, and .xlsx are allowed.";
+                event.preventDefault();
+                return;
+            }
+
+            if (file.size > maxFileSize) {
+                fileError.textContent = "File size exceeds the 2MB limit.";
+                event.preventDefault();
+            }
+        });
+    </script>
+</div>

@@ -1,0 +1,100 @@
+﻿@model IEnumerable<CMCS.Models.MonthlyClaim>
+
+@{
+    ViewData["Title"] = "Manage Claims";
+}
+
+<h1>Manage Claims</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Lecturer Name</th>
+            <th>Hours Worked</th>
+            <th>Hourly Rate</th>
+            <th>Total Amount</th>
+            <th>Notes</th>
+            <th>Document</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr>
+                <td>@claim.LecturerName</td>
+                <td>@claim.HoursWorked</td>
+                <td>@claim.HourlyRate</td>
+                <td>@(claim.HoursWorked * claim.HourlyRate)</td>
+                <td>@claim.Notes</td>
+                <td>
+                    @if (claim.Document != null)
+                    {
+                        <a href="@claim.Document.FilePath" target="_blank">View Document</a>
+                    }
+                </td>
+                <td>@claim.Status</td>
+                <td>
+                    <!-- Approve Button with Modal -->
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approveModal-@claim.Id">Approve</button>
+
+                    <!-- Approve Modal -->
+                    <div class="modal fade" id="approveModal-@claim.Id" tabindex="-1" aria-labelledby="approveModalLabel-@claim.Id" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="approveModalLabel-@claim.Id">Approve Claim</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form asp-action="UpdateClaimStatus" method="post">
+                                        <input type="hidden" name="id" value="@claim.Id" />
+                                        <input type="hidden" name="status" value="Approved" />
+                                        <div class="mb-3">
+                                            <label for="approvalNotes-@claim.Id" class="form-label">Approval Notes</label>
+                                            <textarea class="form-control" id="approvalNotes-@claim.Id" name="notes" rows="3"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-success">Approve Claim</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reject Button with Modal -->
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal-@claim.Id">Reject</button>
+
+                    <!-- Reject Modal -->
+                    <div class="modal fade" id="rejectModal-@claim.Id" tabindex="-1" aria-labelledby="rejectModalLabel-@claim.Id" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="rejectModalLabel-@claim.Id">Reject Claim</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form asp-action="UpdateClaimStatus" method="post">
+                                        <input type="hidden" name="id" value="@claim.Id" />
+                                        <input type="hidden" name="status" value="Rejected" />
+                                        <div class="mb-3">
+                                            <label for="rejectionNotes-@claim.Id" class="form-label">Rejection Notes</label>
+                                            <textarea class="form-control" id="rejectionNotes-@claim.Id" name="notes" rows="3" required></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-danger">Reject Claim</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
